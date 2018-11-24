@@ -8,7 +8,7 @@ from math import sqrt
 
 num_to_find = 600851475143
 
-square_root = int(sqrt(num_to_find))
+# square_root = int(sqrt(num_to_find))
 
 
 def make_primes(max_num):
@@ -20,12 +20,25 @@ def make_primes(max_num):
             for i in primes:
                 if int(root) % i == 0:
                     is_prime = False
+                    break
             if is_prime:
                 primes.append(int(root))
-                print(int(root))
+                if max_num % int(root) == 0:
+                    print(int(root))
+                    print(max_num)
+                    if max_num // int(root) == 0:
+                        print()
+                        print(int(root))
+                        print()
+                        break
+                    else:
+                        max_num = max_num // int(root)
     return primes
 
 
+print(make_primes(num_to_find))
+
+'''
 class factor_checker:
     def __init__(self, primelist, numcheck):
         self.primelist = primelist
@@ -44,3 +57,5 @@ prime_list = make_primes(num_to_find)
 x = factor_checker(prime_list, num_to_find)
 
 print(x.find_factors())
+
+'''
