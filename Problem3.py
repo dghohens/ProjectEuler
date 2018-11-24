@@ -6,38 +6,41 @@ What is the largest prime factor of the number 600851475143 ?
 
 from math import sqrt
 
-square_root = int(sqrt(600851475143))
+num_to_find = 600851475143
 
-possible_list = [i for i in range(3, square_root + 1, 2)]
-
-class create_sieve:
-    def __init__(self, inlist, sievenum, endnum):
-        self.inlist = inlist
-        self.sievenum = sievenum
-        self.endnum = endnum
-
-    def extend_sieve(self):
-        for i in range(self.sievenum, self.endnum, 2 * self.sievenum):
-            if i not in self.inlist:
-                self.inlist.append(i)
-        return self.inlist
+square_root = int(sqrt(num_to_find))
 
 
-def find_primes(in_list):
-    prime_list = [2, 3]
-    x = create_sieve(prime_list, 3, square_root)
-    composite_list = x.extend_sieve()
-    for i in possible_list:
-        if i in composite_list:
-            pass
-        else:
-            prime_list.append(i)
-            print(i)
-            x = create_sieve(composite_list, i, square_root)
-            composite_list.append(x.extend_sieve)
-            print(composite_list)
+def make_primes(max_num):
+    primes = [2, 3]
+    for j in range(25, max_num, 24):
+        root = sqrt(j)
+        if root == int(root):
+            is_prime = True
+            for i in primes:
+                if int(root) % i == 0:
+                    is_prime = False
+            if is_prime:
+                primes.append(int(root))
+                print(int(root))
+    return primes
 
 
+class factor_checker:
+    def __init__(self, primelist, numcheck):
+        self.primelist = primelist
+        self.numcheck = numcheck
 
-primes = find_primes(possible_list)
-print(primes)
+    def find_factors(self):
+        highestnum = 0
+        for i in self.primelist:
+            if numcheck % i == 0:
+                highestnum = i
+        return highestnum
+
+
+prime_list = make_primes(num_to_find)
+
+x = factor_checker(prime_list, num_to_find)
+
+print(x.find_factors())
