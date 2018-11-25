@@ -53,8 +53,51 @@ full_grid = '''08 02 22 97 38 15 00 40 00 75 04 05 07 78 52 12 50 77 91 08
 '''
 
 list_of_lists = [i.split() for i in full_grid.split('\n')]
+list_of_ints = []
 
-lists_of_ints = [int(i) for i in (j for j in list_of_lists)]
+for i in list_of_lists:
+    j = [int(k) for k in i]
+    list_of_ints.append(j)
 
-print(list_of_lists)
-print(lists_of_ints)
+max_num = 0
+
+
+'''Start at the top right of the grid and check the following:
+- 4 digits to the right
+- 4 digits down
+- 4 digits down and right
+- 4 digits down and left
+
+This will check all directions starting at the top and working down. There's no need to check the up, left,
+or up-diagonal directions this way.
+
+There will be lots of index errors.
+'''
+
+for i in range(len(list_of_ints)):
+    for j in range(len(list_of_ints[0])):
+        try:
+            # Check right first
+            rightprod = (list_of_ints[i][j] * list_of_ints[i][j+1] * list_of_ints[i][j+2] * list_of_ints[i][j+3])
+            if rightprod > max_num:
+                max_num = rightprod
+
+            # Check down
+            downprod = (list_of_ints[i][j] * list_of_ints[i+1][j] * list_of_ints[i+2][j] * list_of_ints[i+3][j])
+            if downprod > max_num:
+                max_num = downprod
+
+            # Check down and right diagonal
+            rightdownprod = (list_of_ints[i][j] * list_of_ints[i+1][j+1] * list_of_ints[i+2][j+2] * list_of_ints[i+3][j+3])
+            if rightdownprod > max_num:
+                max_num = rightdownprod
+
+            # Check down and left diagonal
+            leftdownprod = (list_of_ints[i][j] * list_of_ints[i+1][j-1] * list_of_ints[i+2][j-2] * list_of_ints[i+3][j-3])
+            if leftdownprod > max_num:
+                max_num = leftdownprod
+
+        except IndexError:
+            pass
+
+print(max_num)
