@@ -74,5 +74,5 @@ class hand:
         for i in self.cards:
             if i[1] != suit:
                 match = False
-            if i[0] not in ['T', 'J', 'Q', 'K', 'A']
+            if i[0] not in ['T', 'J', 'Q', 'K', 'A']:
                 match = False
