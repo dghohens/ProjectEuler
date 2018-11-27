@@ -16,7 +16,7 @@ import time
 
 def create_primes():
     primes = [2]
-    for possiblePrime in range(3, 10000001, 2):
+    for possiblePrime in range(3, 1000001, 2):
         # Assume number is prime until shown it is not.
         isPrime = True
         for num in range(2, int(possiblePrime ** 0.5) + 1):
