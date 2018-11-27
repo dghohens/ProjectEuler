@@ -11,9 +11,6 @@ is part of an eight prime value family.
 """
 
 
-from itertools import permutations as perm
-
-
 def create_primes():
     primes = [2]
     for possiblePrime in range(3, 1000001, 2):
@@ -32,8 +29,25 @@ def replace_numbers(number,  primelist):
     '''This function accepts a single number. The function will then check if 00, 11, or 22 fit the pattern.
     If one of those numbers fits the pattern, this function will then check for 7 more matches on this pattern.
     '''
-    length = len(number)
-    checkzeros = ' ' * (length - 2) + '00'
-    checkones = ' ' * (length - 2) + '11'
-    checktwos = ' ' * (length - 2) + '22'
-    
+    length = len(str(number))
+    for i in range(0, length - 2):
+        for j in range(i, length - 1):
+            listnum = list(str(number))
+            totalprimes = 0
+            for k in range(10):
+                listnum[i] = str(k)
+                listnum[j] = str(k)
+                if int(''.join(listnum)) in primelist:
+                    totalprimes += 1
+                    print(''.join(listnum))
+    return totalprimes
+
+
+prime_list = create_primes()
+
+
+for i in prime_list[5600:]:
+    print('\n', i, '\n')
+    if replace_numbers(i, prime_list) >= 8:
+        print('Possible hit: ', i)
+        break
