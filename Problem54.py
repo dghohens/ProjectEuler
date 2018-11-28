@@ -61,6 +61,9 @@ How many hands does Player 1 win?
 """
 
 
+from collections import Counter as count
+
+
 infile = open('p054_poker.txt')
 fcontent = infile.readlines()
 
@@ -74,5 +77,93 @@ class hand:
         for i in self.cards:
             if i[1] != suit:
                 match = False
+                break
             if i[0] not in ['T', 'J', 'Q', 'K', 'A']:
                 match = False
+                break
+        return match
+
+    def straight_flush(self):
+        match = True
+        suit = self.cards[1][1]
+        cardset = {}
+        for i in self.cards:
+            if i[1] != suit:
+                match = False
+                break
+            cardset.add(i[0])
+        # Checks for 5 unique cards
+        if len(cardset) != 5:
+            match = False
+        # Check for every type of straight there can be by high card, starting with K and working down to 5.
+        if 'K' in cardset:
+            highcard = 'K'
+            if len(cardset & {'K', 'Q', 'J', 'T', '9'}) != 5:
+                match = False
+        elif 'Q' in cardset:
+            highcard = 'Q'
+            if len(cardset & {'8', 'Q', 'J', 'T', '9'}) != 5:
+                match = False
+        elif 'J' in cardset:
+            highcard = 'J'
+            if len(cardset & {'8', '7', 'J', 'T', '9'}) != 5:
+                match = False
+        elif 'T' in cardset:
+            highcard = 'T'
+            if len(cardset & {'8', '7', '6', 'T', '9'}) != 5:
+                match = False
+        elif '9' in cardset:
+            highcard = '9'
+            if len(cardset & {'8', '7', '6', '5', '9'}) != 5:
+                match = False
+        elif '8' in cardset:
+            highcard = '8'
+            if len(cardset & {'8', '7', '6', '5', '4'}) != 5:
+                match = False
+        elif '7' in cardset:
+            highcard = '7'
+            if len(cardset & {'3', '7', '6', '5', '4'}) != 5:
+                match = False
+        elif '6' in cardset:
+            highcard = '6'
+            if len(cardset & {'3', '2', '6', '5', '4'}) != 5:
+                match = False
+        elif '5' in cardset:
+            highcard = '5'
+            if len(cardset & {'3', '2', 'A', '5', '4'}) != 5:
+                match = False
+
+        return match, highcard
+
+    def four_of_a_kind(self):
+        match = True
+        cardlist = []
+        highcard = ''
+        for i in self.cards:
+            cardlist.append(i[0])
+        carddict = dict(count(cardlist))
+        for i in self.cards:
+            if carddict[i[0]] == 4:
+                fourcard = i[0]
+            elif carddict[i[0]] == 1 and highcard == '':
+                highcard = i[0]
+            else:
+                match = False
+
+        return match, fourcard, highcard
+
+    def full_house(self):
+        match = True
+        cardlist = []
+        twocard = ''
+        for i in self.cards:
+            cardlist.append(i[0])
+        carddict = dict(count(cardlist))
+        for i in self.cards:
+            if carddict[i[0]] == 3:
+                threecard = i[0]
+            elif carddict[i[0]] == 2 and twocard == '':
+                twocard = i[0]
+            else:
+                match = False
+        return match, threecard, twocard
