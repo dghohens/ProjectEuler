@@ -86,7 +86,7 @@ class hand:
     def straight_flush(self):
         match = True
         suit = self.cards[1][1]
-        cardset = {}
+        cardset = set()
         for i in self.cards:
             if i[1] != suit:
                 match = False
@@ -132,7 +132,6 @@ class hand:
             highcard = '5'
             if len(cardset & {'3', '2', 'A', '5', '4'}) != 5:
                 match = False
-
         return match, highcard
 
     def four_of_a_kind(self):
@@ -149,7 +148,6 @@ class hand:
                 highcard = i[0]
             else:
                 match = False
-
         return match, fourcard, highcard
 
     def full_house(self):
@@ -167,3 +165,150 @@ class hand:
             else:
                 match = False
         return match, threecard, twocard
+
+    def flush(self):
+        match = True
+        suit = self.cards[1][1]
+        for i in self.cards:
+            if i[1] != suit:
+                match = False
+                break
+        return match, self.cards
+
+    def straight(self):
+        match = True
+        cardset = set()
+        for i in self.cards:
+            cardset.add(i[0])
+        # Checks for 5 unique cards
+        if len(cardset) != 5:
+            match = False
+        # Check for every type of straight there can be by high card, starting with K and working down to 5.
+        # Check for A K Q J T last, after all other checks, since there's 2 ways to make a straight with A.
+        if 'K' in cardset:
+            highcard = 'K'
+            if len(cardset & {'K', 'Q', 'J', 'T', '9'}) != 5:
+                match = False
+        elif 'Q' in cardset:
+            highcard = 'Q'
+            if len(cardset & {'8', 'Q', 'J', 'T', '9'}) != 5:
+                match = False
+        elif 'J' in cardset:
+            highcard = 'J'
+            if len(cardset & {'8', '7', 'J', 'T', '9'}) != 5:
+                match = False
+        elif 'T' in cardset:
+            highcard = 'T'
+            if len(cardset & {'8', '7', '6', 'T', '9'}) != 5:
+                match = False
+        elif '9' in cardset:
+            highcard = '9'
+            if len(cardset & {'8', '7', '6', '5', '9'}) != 5:
+                match = False
+        elif '8' in cardset:
+            highcard = '8'
+            if len(cardset & {'8', '7', '6', '5', '4'}) != 5:
+                match = False
+        elif '7' in cardset:
+            highcard = '7'
+            if len(cardset & {'3', '7', '6', '5', '4'}) != 5:
+                match = False
+        elif '6' in cardset:
+            highcard = '6'
+            if len(cardset & {'3', '2', '6', '5', '4'}) != 5:
+                match = False
+        elif '5' in cardset:
+            highcard = '5'
+            if len(cardset & {'3', '2', 'A', '5', '4'}) != 5:
+                match = False
+        elif 'A' in cardset:
+            highcard = 'A'
+            if len(cardset & {'K', 'Q', 'J', 'T', 'A'}) != 5:
+                match = False
+        return match, highcard
+
+    def three_of_a_kind(self):
+        match = False
+        cardlist = []
+        nonmatch_list = []
+        for i in self.cards:
+            cardlist.append(i[0])
+        carddict = dict(count(cardlist))
+        for i in carddict:
+            if carddict[i] == 3:
+                threecard = i
+                match = True
+            else:
+                nonmatch_list.append(i)
+        return match, threecard, nonmatch_list
+
+    def two_pair(self):
+        match = False
+        cardlist = []
+        highpair = ''
+        lowpair = ''
+        for i in self.cards:
+            cardlist.append(i[0])
+        carddict = dict(count(cardlist))
+        for i in carddict:
+            if carddict[i] == 2 and i != highpair:
+                highpair = i
+            elif carddict[i] == 2:
+                lowpair = i
+                match = True
+            else:
+                highcard = i
+        if highpair < lowpair:
+            swappair = lowpair
+            lowpair = highpair
+            highpair = swappair
+        return match, highpair, lowpair, highcard
+
+    def one_pair(self):
+        match = False
+        cardlist = []
+        nonmatch_list = []
+        for i in self.cards:
+            cardlist.append(i[0])
+        carddict = dict(count(cardlist))
+        for i in carddict:
+            if carddict[i] == 2:
+                pair = i
+                match = True
+            else:
+                nonmatch_list.append(i)
+        return match, pair, nonmatch_list
+
+    def high_card(self):
+        highcard = ''
+        cardvalues = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2']
+        for i in self.cards:
+            if i[0] == 'A':
+                highcard = i[0]
+                break
+            elif i[0] == 'K' and highcard not in cardvalues[:1]:
+                highcard = i[0]
+            elif i[0] == 'Q' and highcard not in cardvalues[:2]:
+                highcard = i[0]
+            elif i[0] == 'J' and highcard not in cardvalues[:3]:
+                highcard = i[0]
+            elif i[0] == 'T' and highcard not in cardvalues[:4]:
+                highcard = i[0]
+            elif i[0] == '9' and highcard not in cardvalues[:5]:
+                highcard = i[0]
+            elif i[0] == '8' and highcard not in cardvalues[:6]:
+                highcard = i[0]
+            elif i[0] == '7' and highcard not in cardvalues[:7]:
+                highcard = i[0]
+            elif i[0] == '6' and highcard not in cardvalues[:8]:
+                highcard = i[0]
+            elif i[0] == '5' and highcard not in cardvalues[:9]:
+                highcard = i[0]
+            elif i[0] == '4' and highcard not in cardvalues[:10]:
+                highcard = i[0]
+            elif i[0] == '3' and highcard not in cardvalues[:11]:
+                highcard = i[0]
+            elif i[0] == '2' and highcard != '':
+                highcard = i[0]
+        return highcard
+    
