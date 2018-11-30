@@ -86,6 +86,7 @@ class hand:
     def straight_flush(self):
         match = True
         suit = self.cards[1][1]
+        highcard = ''
         cardset = set()
         for i in self.cards:
             if i[1] != suit:
@@ -138,6 +139,7 @@ class hand:
         match = True
         cardlist = []
         highcard = ''
+        fourcard = ''
         for i in self.cards:
             cardlist.append(i[0])
         carddict = dict(count(cardlist))
@@ -154,6 +156,7 @@ class hand:
         match = True
         cardlist = []
         twocard = ''
+        threecard = ''
         for i in self.cards:
             cardlist.append(i[0])
         carddict = dict(count(cardlist))
@@ -173,7 +176,7 @@ class hand:
             if i[1] != suit:
                 match = False
                 break
-        return match, self.cards
+        return match
 
     def straight(self):
         match = True
@@ -231,6 +234,7 @@ class hand:
         match = False
         cardlist = []
         nonmatch_list = []
+        threecard=''
         for i in self.cards:
             cardlist.append(i[0])
         carddict = dict(count(cardlist))
@@ -268,15 +272,16 @@ class hand:
         match = False
         cardlist = []
         nonmatch_list = []
+        pair = ''
         for i in self.cards:
             cardlist.append(i[0])
         carddict = dict(count(cardlist))
-        for i in carddict:
-            if carddict[i] == 2:
-                pair = i
+        for j in carddict:
+            if carddict[j] == 2:
+                pair = j
                 match = True
             else:
-                nonmatch_list.append(i)
+                nonmatch_list.append(j)
         return match, pair, nonmatch_list
 
     def high_card(self):
@@ -308,7 +313,39 @@ class hand:
                 highcard = i[0]
             elif i[0] == '3' and highcard not in cardvalues[:11]:
                 highcard = i[0]
-            elif i[0] == '2' and highcard != '':
+            elif i[0] == '2' and highcard == '':
                 highcard = i[0]
         return highcard
-    
+
+
+def match(hand_class):
+    matchname = ''
+    matchcard = ''
+    highcard = ''
+    if hand_class.royal_flush() == True:
+        matchname = 'RF'
+    elif hand_class.straight_flush()[0] == True:
+        matchname = 'SF'
+        highcard = hand_class.straight_flush()[1]
+    elif hand_class.four_of_a_kind()[0] == True:
+        matchname = 'FK'
+        matchcard = hand_class.four_of_a_kind()[1]
+        highcard = hand_class.four_of_a_kind()[2]
+    elif hand_class.full_house()[0] == True:
+        matchname = 'FH'
+        matchcard = hand_class.full_house()[1]
+        highcard = hand_class.full_house()[2]
+    elif hand_class.flush()[0] == True:
+        matchname = 'F'
+        highcard = hand_class.high_card()
+        pass
+    pass
+
+if __name__ == "__main__":
+    player1wins = 0
+    for i in fcontent:
+        player1hand = hand(i[:15].split())
+        player2hand = hand(i[15:].split())
+        #print(player1hand.flush())
+        if player1hand.flush() == True:
+            print('flush on line: ', i)
