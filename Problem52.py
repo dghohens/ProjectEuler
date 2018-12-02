@@ -20,15 +20,24 @@ def numcheck(listnumber, checklist):
 
 while numsearch:
     listnum = [int(x) for x in str(num_to_check)]
-    list2 = [2 * x for x in listnum]
+    num2 = 2 * num_to_check
+    list2 = [int(x) for x in str(num2)]
     if numcheck(listnum, list2):
-        list3 = [3 * x for x in listnum]
+        print('2match on ', num_to_check)
+        num3 = 3 * num_to_check
+        list3 = [int(x) for x in str(num3)]
         if numcheck(listnum, list3):
-            list4 = [4 * x for x in listnum]
+            print('3match on ', num_to_check)
+            num4 = 4 * num_to_check
+            list4 = [int(x) for x in str(num4)]
             if numcheck(listnum, list4):
-                list5 = [5 * x for x in listnum]
+                print('4match on ', num_to_check)
+                num5 = 5 * num_to_check
+                list5 = [int(x) for x in str(num5)]
                 if numcheck(listnum, list5):
-                    list6 = [6 * x for x in listnum]
+                    print('5match on ', num_to_check)
+                    num6 = 6 * num_to_check
+                    list6 = [int(x) for x in str(num6)]
                     if numcheck(listnum, list6):
                         numsearch = False
                         print(num_to_check)
