@@ -244,7 +244,8 @@ class hand:
                 match = True
             else:
                 nonmatch_list.append(i)
-        return match, threecard, nonmatch_list
+        highcard = self.high_card(nonmatch_list)
+        return match, threecard, highcard
 
     def two_pair(self):
         match = False
@@ -282,12 +283,13 @@ class hand:
                 match = True
             else:
                 nonmatch_list.append(j)
-        return match, pair, nonmatch_list
+        highcard = self.high_card(nonmatch_list)
+        return match, pair, highcard
 
-    def high_card(self):
+    def high_card(self, cards):
         highcard = ''
         cardvalues = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2']
-        for i in self.cards:
+        for i in cards:
             if i[0] == 'A':
                 highcard = i[0]
                 break
@@ -319,33 +321,106 @@ class hand:
 
 
 def match(hand_class):
-    matchname = ''
-    matchcard = ''
+    matchname = 10
+    matchcard1 = ''
+    matchcard2 = ''
     highcard = ''
     if hand_class.royal_flush() == True:
-        matchname = 'RF'
+        matchname = 1
     elif hand_class.straight_flush()[0] == True:
-        matchname = 'SF'
+        matchname = 2
         highcard = hand_class.straight_flush()[1]
     elif hand_class.four_of_a_kind()[0] == True:
-        matchname = 'FK'
-        matchcard = hand_class.four_of_a_kind()[1]
+        matchname = 3
+        matchcard1 = hand_class.four_of_a_kind()[1]
         highcard = hand_class.four_of_a_kind()[2]
     elif hand_class.full_house()[0] == True:
-        matchname = 'FH'
-        matchcard = hand_class.full_house()[1]
+        matchname = 4
+        matchcard1 = hand_class.full_house()[1]
         highcard = hand_class.full_house()[2]
     elif hand_class.flush()[0] == True:
-        matchname = 'F'
+        matchname = 5
         highcard = hand_class.high_card()
-        pass
-    pass
+    elif hand_class.straight()[0] == True:
+        matchname = 6
+        highcard = hand_class.high_card()
+    elif hand_class.three_of_a_kind()[0] == True:
+        matchname = 7
+        matchcard1 = hand_class.three_of_a_kind()[1]
+        highcard = hand_class.three_of_a_kind()[2]
+    elif hand_class.two_pair()[0] == True:
+        matchname = 8
+        matchcard1 = hand_class.two_pair()[1]
+        matchcard2 = hand_class.two_pair()[2]
+        highcard = hand_class.two_pair()[3]
+    elif hand_class.one_pair()[0] == True:
+        matchname = 9
+        matchcard1 = hand_class.one_pair()[1]
+        highcard = hand_class.one_pair()[2]
+    else:
+        matchname = 10
+        highcard = hand_class.high_card()
+    return matchname, matchcard1, matchcard2, highcard
+
+
+def card_to_num(card):
+    if card == 'A':
+        cardval = 1
+    elif card == 'K':
+        cardval = 2
+    elif card == 'Q':
+        cardval = 3
+    elif card == 'J':
+        cardval = 4
+    elif card == 'T':
+        cardval = 5
+    elif card == '9':
+        cardval = 6
+    elif card == '8':
+        cardval = 7
+    elif card == '7':
+        cardval = 8
+    elif card == '6':
+        cardval = 9
+    elif card == '5':
+        cardval = 10
+    elif card == '4':
+        cardval = 11
+    elif card == '3':
+        cardval = 12
+    elif card == '2':
+        cardval = 13
+    return cardval
+
+
+def winner(match_name_p1, match_card1_p1, match_card2_p1, high_card_p1,match_name_p2, match_card1_p2, match_card2_p2, high_card_p2):
+    if match_name_p1 < match_name_p2:
+        winner = 'p1'
+    elif match_name_p1 > match_name_p2:
+        winner = 'p2'
+    elif match_name_p1 == match_name_p2:
+        if match_card1_p1 < match_card1_p2:
+            winner = 'p1'
+        elif match_card1_p1 > match_card1_p2:
+            winner = 'p2'
+        elif match_card1_p1 == match_card1_p2:
+            if match_card2_p1 < match_card2_p2:
+                winner = 'p1'
+            elif match_card2_p1 > match_card2_p2:
+                winner = 'p2'
+            elif match_card2_p1 == match_card2_p2:
+                if high_card_p1 < high_card_p2:
+                    winner = 'p1'
+                elif high_card_p1 > high_card_p2:
+                    winner = 'p2'
+                else:
+                    winner = 'tie'
+    return winner
+
 
 if __name__ == "__main__":
     player1wins = 0
     for i in fcontent:
         player1hand = hand(i[:15].split())
         player2hand = hand(i[15:].split())
-        #print(player1hand.flush())
-        if player1hand.flush() == True:
-            print('flush on line: ', i)
+        print(player1hand.one_pair())
